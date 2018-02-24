@@ -37,12 +37,10 @@
 
 -(void)caculateNext
 {
-    NSLog(@"curPoint1 : %f  %f",curPoint.x ,curPoint.y);
     int count = arc4random() % 200 -100;
     float width = (kWidth - curWidth*2)*count/100;
     width = (count>=0) ? width + curWidth*0.5 : width-curWidth*0.5;
     curPoint = CGPointMake(curPoint.x + width*cos(M_PI/6.0), curPoint.y-fabs(width)*0.5);
-    NSLog(@"curPoint2 : %f  %f",curPoint.x ,curPoint.y);
     _resetPoint = CGPointMake(-width*cos(M_PI/6.0), fabs(width)*0.5);
 }
 
@@ -51,7 +49,8 @@
     int flag = 1+arc4random() % 3;
     NSString * imageName = [NSString stringWithFormat:@"foundation_%d",flag];
     NSLog(@"%@", imageName);
-    GameFoundation * f = [[GameFoundation alloc] initWithSite:CGPointMake(curPoint.x, curPoint.y) image:imageName];
+    float dropHeight = 80.0f;
+    GameFoundation * f = [[GameFoundation alloc] initWithSite:CGPointMake(curPoint.x, curPoint.y - dropHeight) image:imageName];
     curWidth = f.frame.size.width;
     [viewVC.view addSubview:f];
     [f dropAction:curPoint];
@@ -61,6 +60,13 @@
     [_foundations addObject:f];
     //滚动 提前预设坐标
     curPoint = CGPointMake(curPoint.x + _resetPoint.x, curPoint.y + _resetPoint.y);
+    
+    if(_foundations.count >= 6){
+        GameFoundation * old = _foundations[0];
+        [old removeFromSuperview];
+        [_foundations removeObjectAtIndex:0];
+        old = nil;
+    }
 }
 
 -(NSMutableArray* )foundations
