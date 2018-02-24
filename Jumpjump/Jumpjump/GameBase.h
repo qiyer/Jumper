@@ -10,8 +10,13 @@
 
 @interface GameBase : UIView
 
--(void)setSurface:(int) flag;
+@property(nonatomic,assign) CGPoint anchorPoint;
 
--(void)updatePosition:(CGPoint) point;
+- (instancetype)initWithFrame:(CGRect) frame image:(NSString*) url;
+- (instancetype)initWithSite :(CGPoint)point image:(NSString*) url;
+
+-(void)setSurface     :(int)     flag;
+-(void)updatePosition :(CGPoint) point;
+-(void)dropAction     :(CGPoint) point;
 
 @end

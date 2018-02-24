@@ -7,37 +7,50 @@
 //
 
 #import "GameViewController.h"
-#import "GameRoler.h"
 #import "GameFoundation.h"
+#import "GameRoler.h"
+#import "ActionController.h"
 
 @implementation GameViewController{
-    double           timeCount;
-    GameRoler      * roler;
-    NSMutableArray * foundations;
+    double             timeCount;
+    GameRoler        * roler;
+    CADisplayLink    * displayLink;
+    UILabel          * scoreLab;
+    ActionController * actionCtrl;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    self.view.backgroundColor = [UIColor whiteColor];
     
     [self initSprite];
+    [self initContrl];
     [self initEvents];
 }
 
 -(void)initSprite
 {
-    roler = [[GameRoler alloc] initWithFrame:CGRectMake(100, 400, 30, 30)];
-    [self.view addSubview:roler];
+    CAGradientLayer *gradient = [CAGradientLayer layer];
+    gradient.frame = self.view.bounds;
+    gradient.colors = [NSArray arrayWithObjects:
+                       (id)[UIColor whiteColor].CGColor,
+                       (id)[UIColor colorWithRed:255/255.0 green:192/255.0 blue:203/255.0 alpha:1.0].CGColor,
+                       (id)[UIColor colorWithRed:255/255.0 green:182/255.0 blue:193/255.0 alpha:1.0].CGColor,
+                        nil];
+    [self.view.layer addSublayer:gradient];
     
-    GameFoundation * foundation1 = [[GameFoundation alloc]initWithFrame:CGRectMake(50, 500, 60, 60) color:[UIColor redColor]];
-    [self.view addSubview:foundation1];
+    scoreLab = [[UILabel alloc] initWithFrame:CGRectMake(30, 60, 200, 60)];
+    scoreLab.text = @"888";
+    scoreLab.font = [UIFont systemFontOfSize:40 weight:3];
+    scoreLab.textColor = [UIColor darkGrayColor];
+    [self.view addSubview:scoreLab];
+    
+    roler = [[GameRoler alloc] initWithSite:CGPointMake(60, 300) image:@"role"];
+    [self.view addSubview:roler];
 }
 
 -(void)initEvents
 {
     UILongPressGestureRecognizer *longPressGest = [[UILongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPressView:)];
-    //长按等待时间
-    //    longPressGest.minimumPressDuration = 3;
     //长按时候,手指头可以移动的距离
     longPressGest.allowableMovement = 30;
     [self.view addGestureRecognizer:longPressGest];
@@ -45,6 +58,50 @@
     
     UITapGestureRecognizer *tapGest = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(oneClick:)];
     [self.view addGestureRecognizer:tapGest];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(notificationJumped) name:JUMP_EVENT_ROLEJUMPED object:nil];
+}
+
+-(void)initContrl
+{
+    if (!actionCtrl) {
+        actionCtrl = [[ActionController alloc]init];
+        __weak typeof(self)  weakSelf = self;
+        [actionCtrl initFoundations:weakSelf];
+    }
+}
+
+- (void)startDisplayLink{
+    displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(handleDisplayLink:)];
+    [displayLink addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+}
+
+- (void)handleDisplayLink:(CADisplayLink *)displayLink{
+    //do something
+    NSLog(@"handleDisplayLink");
+}
+
+- (void)stopDisplayLink{
+    [displayLink invalidate];
+    displayLink = nil;
+}
+
+-(void)notificationJumped
+{
+    [actionCtrl caculateNext];
+    [actionCtrl createNext];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [self resetScreen];
+    });
+}
+
+-(void)resetScreen
+{
+    CGPoint point = actionCtrl.resetPoint;
+    [roler updatePosition:point];
+    for (GameBase * gameBase in actionCtrl.foundations) {
+        [gameBase updatePosition:point];
+    }
 }
 
 -(void)longPressView:(UILongPressGestureRecognizer *)longPressGest

@@ -1,0 +1,21 @@
+//
+//  PrefixHeader.pch
+//  Jumpjump
+//
+//  Created by Zhi Zhuang on 2018/2/22.
+//  Copyright © 2018年 Zhi Zhuang. All rights reserved.
+//
+
+#ifndef PrefixHeader_pch
+#define PrefixHeader_pch
+
+#import <Foundation/Foundation.h>
+
+#define kWidth  [UIScreen mainScreen].bounds.size.width
+#define kHeight [UIScreen mainScreen].bounds.size.height
+
+#define kDefaltPoint CGPointMake(kWidth*0.28, kHeight*0.6)
+
+static const NSNotificationName  JUMP_EVENT_ROLEJUMPED      = @"jump_event_jumped";
+
+#endif /* PrefixHeader_pch */

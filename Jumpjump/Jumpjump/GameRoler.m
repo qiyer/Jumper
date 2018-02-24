@@ -32,6 +32,7 @@
                                           completion:^(BOOL finished) {
                                               // 动画完成后执行
                                               // code...
+                                              [[NSNotificationCenter defaultCenter] postNotificationName:JUMP_EVENT_ROLEJUMPED object:nil];
                                           }];
                      }];
 }

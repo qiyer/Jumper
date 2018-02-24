@@ -8,9 +8,8 @@
 
 #import "MainViewController.h"
 #import "GameViewController.h"
+#import "ImageCongif.h"
 
-#define kWidth  [UIScreen mainScreen].bounds.size.width
-#define kHeight [UIScreen mainScreen].bounds.size.height
 
 @implementation MainViewController
 
@@ -23,12 +22,14 @@
     btn.backgroundColor = [UIColor redColor];
     [self.view addSubview:btn];
     [btn addTarget:self action:@selector(gotoGameVC) forControlEvents:UIControlEventTouchUpInside];
+    
+    [[ImageCongif shareInstance] loadImgData];
 }
 
 -(void)gotoGameVC
 {
     GameViewController*  gameVC = [[GameViewController alloc] init];
-    [self presentViewController:gameVC animated:YES completion:nil];
+    [self presentViewController:gameVC animated:NO completion:nil];
     NSLog(@"11111");
 }
 
