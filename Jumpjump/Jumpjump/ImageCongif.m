@@ -41,4 +41,14 @@
     }
     return CGPointMake(0, 0);
 }
+
+-(CGFloat) getWidthByName:(NSString*)image
+{
+    if (imgDic && [imgDic objectForKey:image]) {
+        NSString * value = imgDic[image];
+        NSArray * arr = [value componentsSeparatedByString:@","];
+        return [arr[2] floatValue];
+    }
+    return 0;
+}
 @end

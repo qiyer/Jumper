@@ -9,7 +9,9 @@
 #import "GameBase.h"
 #import "ImageCongif.h"
 
-@implementation GameBase
+@implementation GameBase{
+    NSString * imageName;
+}
 
 - (instancetype)initWithFrame:(CGRect)frame
 {
@@ -29,6 +31,7 @@
 
 - (instancetype)initWithFrame:(CGRect) frame image:(NSString*) url
 {
+    imageName = url;
     self = [super initWithFrame:frame];
     if (self) {
         UIImageView * image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:url]];
@@ -39,6 +42,7 @@
 
 - (instancetype)initWithSite:(CGPoint)point image:(NSString*) url
 {
+    imageName = url;
     UIImageView * image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:url]];
     self.anchorPoint = [[ImageCongif shareInstance] getAnchorPointByName:url];
     NSLog(@"anchorPoint: %f   %f", self.anchorPoint.x, self.anchorPoint.y);
@@ -52,6 +56,9 @@
         image.layer.shadowRadius = 5;//阴影半径
         [self addSubview:image];
     }
+    UIView * redV = [[UIView alloc] initWithFrame:CGRectMake(self.anchorPoint.x, self.anchorPoint.y, 5, 5)];
+    [self addSubview:redV];
+    redV.backgroundColor = [UIColor redColor];
     return self;
 }
 
@@ -63,6 +70,7 @@
 -(void)updatePosition:(CGPoint) point
 {
     CGPoint newPoint = CGPointMake(self.center.x + point.x, self.center.y + point.y);
+    NSLog(@"%@ updatePosition:%f   %f",imageName,newPoint.x , newPoint.y);
     [UIView animateWithDuration:0.4f // 动画时长
                           delay:0.0f // 动画延迟
                         options:UIViewAnimationOptionCurveEaseOut // 动画过渡效果

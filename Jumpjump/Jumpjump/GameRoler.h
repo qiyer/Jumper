@@ -10,6 +10,6 @@
 
 @interface GameRoler : GameBase
 
--(void)jump:(int) baseCount;
+-(void)jump:(int) baseCount toPoint:(CGPoint) point;
 
 @end

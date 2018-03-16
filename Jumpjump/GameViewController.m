@@ -23,7 +23,6 @@
     [super viewDidLoad];
     
     [self initSprite];
-    [self initContrl];
     [self initEvents];
 }
 
@@ -44,7 +43,8 @@
     scoreLab.textColor = [UIColor darkGrayColor];
     [self.view addSubview:scoreLab];
     
-    roler = [[GameRoler alloc] initWithSite:CGPointMake(60, 300) image:@"role"];
+    [self initContrl];
+    roler = [[GameRoler alloc] initWithSite:kDefaltPoint image:@"role"];
     [self.view addSubview:roler];
 }
 
@@ -114,7 +114,7 @@
     } else {
         timeCount = [self getCurrentTime] - timeCount;
         NSLog(@"长按手势结束:%f",timeCount);
-        double num = timeCount*10.0 + 5 ;
+        double num = timeCount*35 + 10 ;
         [self jumpRoler:(int)num];
     }
     
@@ -122,14 +122,14 @@
 
 -(void)oneClick:(UITapGestureRecognizer *)tapGest
 {
-    [self jumpRoler:5];
+    [self jumpRoler:10];
     NSLog(@"one click");
 }
 
 -(void)jumpRoler:(int) count
 {
     NSLog(@"jumpRoler count:%d",count);
-    [roler jump:count];
+    [roler jump:count toPoint:actionCtrl.toPoint];
 }
 
 -(double) getCurrentTime

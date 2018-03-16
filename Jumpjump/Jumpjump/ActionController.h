@@ -12,9 +12,10 @@
 
 -(void)initFoundations:(UIViewController*) vc;
 -(NSMutableArray* )foundations;
+    
 -(CGPoint )resetPoint;
+-(CGPoint )toPoint;
 
 -(void)caculateNext;
 -(void)createNext;
-
 @end

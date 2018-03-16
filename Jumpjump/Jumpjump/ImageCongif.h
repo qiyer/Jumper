@@ -14,4 +14,5 @@
 
 -(void)loadImgData;
 -(CGPoint) getAnchorPointByName:(NSString*)image;
+-(CGFloat) getWidthByName:(NSString*)image;
 @end
